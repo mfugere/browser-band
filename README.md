@@ -10,23 +10,23 @@ MIDI.js
 
 v1.0 Stories
 ------------
-[x] Basic implementation of MIDI.js (note/chord playback)
-[x] Play/stop options
-[x] Chord options/interpretation
-[x] Key/chord input
-[] Multiple chord inputs
-[] Sequenced playback
-[] Measures
-[] Multiple chords per measure
-[] Tempo
-[] General styling enhancements
-[] Highlight current measure and chord
-[] Chord typeahead
-[] Drums + piano
-[] Specify number of measures
-[] Looping
-[] Style options menu
-[] Swing rhythm
+- [x] Basic implementation of MIDI.js (note/chord playback)
+- [x] Play/stop options
+- [x] Chord options/interpretation
+- [x] Key/chord input
+- [ ] Multiple chord inputs
+- [ ] Sequenced playback
+- [ ] Measures
+- [ ] Multiple chords per measure
+- [ ] Tempo
+- [ ] General styling enhancements
+- [ ] Highlight current measure and chord
+- [ ] Chord typeahead
+- [ ] Drums + piano
+- [ ] Specify number of measures
+- [ ] Looping
+- [ ] Style options menu
+- [ ] Swing rhythm
 
 Feature Backlog
 ---------------
