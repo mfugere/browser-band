@@ -1,6 +1,9 @@
 var interval;
+var curMeasure, measures;
 
 function play () {
+	curMeasure = 1;
+	measures = 4;
 	MIDI.loadPlugin({
 		soundfontUrl: "./soundfont/",
 		instrument: "acoustic_grand_piano",
@@ -19,7 +22,7 @@ function stop () {
 }
 
 function update () {
-	var input = document.getElementById("chord").value;
+	var input = document.getElementById("chord" + curMeasure).value;
 	var pivot = 1;
 	if (input[1] === "b") pivot = 2;
 	var strKey = input.substring(0, pivot);
@@ -27,6 +30,8 @@ function update () {
 	var chord = getChord(strKey, 3, strChord);
 	MIDI.chordOn(0, chord, 127, 0);
 	MIDI.noteOff(0, chord, 1);
+	curMeasure += 1;
+	if (curMeasure > measures) stop();
 }
 
 function getChord (base, octave, chord) {

@@ -14,9 +14,9 @@ v1.0 Stories
 - [x] Play/stop options
 - [x] Chord options/interpretation
 - [x] Key/chord input
-- [ ] Multiple chord inputs
-- [ ] Sequenced playback
-- [ ] Measures
+- [x] Multiple chord inputs
+- [x] Sequenced playback
+- [x] Measures
 - [ ] Multiple chords per measure
 - [ ] Tempo
 - [ ] General styling enhancements
