@@ -7,6 +7,8 @@ The user will be capable of entering chords within measures, and specifying a te
 Libraries Used
 ---------------
 MIDI.js
+midi-js-soundfonts
+Angular.JS
 
 v1.0 Stories
 ------------
@@ -17,13 +19,14 @@ v1.0 Stories
 - [x] Multiple chord inputs
 - [x] Sequenced playback
 - [x] Measures
-- [ ] Multiple chords per measure
+- [x] Multiple chords per measure
 - [ ] Tempo
+- [ ] Time signature changes
 - [ ] General styling enhancements
 - [ ] Highlight current measure and chord
 - [ ] Chord typeahead
 - [ ] Drums + piano
-- [ ] Specify number of measures
+- [x] Specify number of measures
 - [ ] Looping
 - [ ] Style options menu
 - [ ] Swing rhythm
@@ -38,4 +41,3 @@ Feature Backlog
 - Improvisation helper
 - Preset songs
 - Switch styles mid-song
-- Time signature changes

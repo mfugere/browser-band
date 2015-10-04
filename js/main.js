@@ -1,54 +1,77 @@
-var interval;
-var curMeasure, measures;
-
-function play () {
-	curMeasure = 1;
-	measures = 4;
-	MIDI.loadPlugin({
-		soundfontUrl: "./soundfont/",
-		instrument: "acoustic_grand_piano",
-		onprogress: function(state, progress) {
-			console.log(state, progress);
-		},
-		onsuccess: function() {
-			MIDI.setVolume(0, 127);
-			interval = setInterval(update, 1000);
+angular.module("browserBand", [])
+	.factory("ChordService", function () {
+		var chords = {
+			"maj": [ 4, 7 ],
+			"maj7": [ 4, 7, 11 ],
+			"m": [ 3, 7 ],
+			"m7": [ 3, 7, 10 ],
+			"7": [ 4, 7, 10 ],
+			"7b9": [ 4, 7, 10, 13 ]
+		};
+		var getChord = function (base, octave, name) {
+			var baseNote = MIDI.keyToNote[base + octave];
+			var output = [ baseNote ];
+			var chordVals = chords[name];
+			for (var i in chordVals) {
+				output.push(baseNote + chordVals[i]);
+			}
+			return output;
+		};
+		return {
+			getChord: getChord
 		}
-	});
-}
-
-function stop () {
-	clearInterval(interval);
-}
-
-function update () {
-	var input = document.getElementById("chord" + curMeasure).value;
-	var pivot = 1;
-	if (input[1] === "b") pivot = 2;
-	var strKey = input.substring(0, pivot);
-	var strChord = input.substring(pivot, input.length);
-	var chord = getChord(strKey, 3, strChord);
-	MIDI.chordOn(0, chord, 127, 0);
-	MIDI.noteOff(0, chord, 1);
-	curMeasure += 1;
-	if (curMeasure > measures) stop();
-}
-
-function getChord (base, octave, chord) {
-	var baseNote = MIDI.keyToNote[base + octave];
-	var output = [ baseNote ];
-	var chordVals = chords[chord];
-	for (var i in chordVals) {
-		output.push(baseNote + chordVals[i]);
-	}
-	return output;
-}
-
-var chords = {
-	"maj": [ 4, 7 ],
-	"maj7": [ 4, 7, 11 ],
-	"m": [ 3, 7 ],
-	"m7": [ 3, 7, 10 ],
-	"7": [ 4, 7, 10 ],
-	"7b9": [ 4, 7, 10, 13 ]
-};
+	})
+	.controller("MainController", [ "$scope", "$interval", "ChordService", function ($scope, $interval, ChordService) {
+		var interval;
+		$scope.measures = [];
+		$scope.numMeasures = 4;
+		$scope.timeSignature = 4;
+		$scope.tempo;
+		$scope.currentMeasure = [ 0, 0 ];
+		$scope.play = function () {
+			$scope.tempo = 1000; // Millis per 1/4 measure
+			MIDI.loadPlugin({
+				soundfontUrl: "./soundfont/",
+				instrument: "acoustic_grand_piano",
+				onsuccess: function() {
+					MIDI.setVolume(0, 127);
+					$scope.currentChord = ChordService.getChord("C", 3, "maj");
+					interval = $interval(function () {
+						$scope.update();
+						$scope.currentMeasure[1] += 1;
+						if ($scope.currentMeasure[1] >= $scope.timeSignature) {
+							$scope.currentMeasure[0] += 1;
+							$scope.currentMeasure[1] = 0;
+						}
+						if ($scope.currentMeasure[0] >= $scope.numMeasures) $scope.stop();
+					}, $scope.tempo);
+				}
+			});
+		};
+		$scope.stop = function () {
+			$interval.cancel(interval);
+		};
+		$scope.update = function () {
+			var input = $scope.measures[$scope.currentMeasure[0]][$scope.currentMeasure[1]];
+			if (input) {
+				var pivot = 1;
+				if (input[1] === "b") pivot = 2;
+				var strKey = input.substring(0, pivot);
+				var strChord = input.substring(pivot, input.length);
+				$scope.currentChord = ChordService.getChord(strKey, 3, strChord);
+			}
+			MIDI.chordOn(0, $scope.currentChord, 127, 0);
+			MIDI.noteOff(0, $scope.currentChord, 1);
+		};
+		$scope.$watch("numMeasures", function (newVal, oldVal) {
+			if ($scope.measures.length > 0) {
+				if (newVal < $scope.measures.length) {
+					for (var i = 0; i < (oldVal - newVal); i++) $scope.measures.pop();
+				} else {
+					for (var i = 0; i < (newVal - oldVal); i++) $scope.measures.push(new Array($scope.timeSignature));
+				}
+			} else {
+				for (var i = 0; i < $scope.numMeasures; i++) $scope.measures.push(new Array($scope.timeSignature));
+			}
+		});
+	}]);
