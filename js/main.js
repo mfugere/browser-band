@@ -27,13 +27,14 @@ angular.module("browserBand", [])
 		$scope.numMeasures = 4;
 		$scope.timeSignature = 4;
 		$scope.tempo = 250; // Millis per 1/4 measure
-		$scope.currentMeasure = [ 0, 0 ];
+		$scope.highlight = [];
 		$scope.play = function () {
 			MIDI.loadPlugin({
 				soundfontUrl: "./soundfont/",
 				instrument: "acoustic_grand_piano",
 				onsuccess: function() {
 					MIDI.setVolume(0, 127);
+					$scope.currentMeasure = [ 0, 0 ];
 					$scope.currentChord = ChordService.getChord("C", 3, "maj");
 					interval = $interval(function () {
 						$scope.update();
@@ -49,7 +50,6 @@ angular.module("browserBand", [])
 		};
 		$scope.stop = function () {
 			$interval.cancel(interval);
-			$scope.currentMeasure = [ 0, 0 ];
 		};
 		$scope.update = function () {
 			var input = $scope.measures[$scope.currentMeasure[0]][$scope.currentMeasure[1]];
@@ -60,6 +60,7 @@ angular.module("browserBand", [])
 				var strChord = input.substring(pivot, input.length);
 				$scope.currentChord = ChordService.getChord(strKey, 3, strChord);
 			}
+			$scope.highlight = [ $scope.currentMeasure[0], $scope.currentMeasure[1] ];
 			MIDI.chordOn(0, $scope.currentChord, 127, 0);
 			MIDI.noteOff(0, $scope.currentChord, 1);
 		};

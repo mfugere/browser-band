@@ -9,6 +9,7 @@ Libraries Used
 MIDI.js
 midi-js-soundfonts
 Angular.JS
+Bootstrap 3
 
 v1.0 Stories
 ------------
@@ -22,8 +23,8 @@ v1.0 Stories
 - [x] Multiple chords per measure
 - [x] Tempo
 - [x] Time signature changes
-- [ ] General styling enhancements
-- [ ] Highlight current measure and chord
+- [x] General styling enhancements
+- [x] Highlight current measure and chord
 - [ ] Chord typeahead
 - [ ] Drums + piano
 - [x] Specify number of measures
