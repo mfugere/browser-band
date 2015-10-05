@@ -26,10 +26,9 @@ angular.module("browserBand", [])
 		$scope.measures = [];
 		$scope.numMeasures = 4;
 		$scope.timeSignature = 4;
-		$scope.tempo;
+		$scope.tempo = 250; // Millis per 1/4 measure
 		$scope.currentMeasure = [ 0, 0 ];
 		$scope.play = function () {
-			$scope.tempo = 1000; // Millis per 1/4 measure
 			MIDI.loadPlugin({
 				soundfontUrl: "./soundfont/",
 				instrument: "acoustic_grand_piano",
@@ -50,6 +49,7 @@ angular.module("browserBand", [])
 		};
 		$scope.stop = function () {
 			$interval.cancel(interval);
+			$scope.currentMeasure = [ 0, 0 ];
 		};
 		$scope.update = function () {
 			var input = $scope.measures[$scope.currentMeasure[0]][$scope.currentMeasure[1]];
@@ -63,15 +63,34 @@ angular.module("browserBand", [])
 			MIDI.chordOn(0, $scope.currentChord, 127, 0);
 			MIDI.noteOff(0, $scope.currentChord, 1);
 		};
+		$scope.$watch("timeSignature", function () {
+			$scope.measures = [];
+			for (var i = 0; i < $scope.numMeasures; i++) {
+				$scope.measures.push([]);
+				for (var j = 0; j < $scope.timeSignature; j++) {
+					$scope.measures[i].push("");
+				}
+			}
+		});
 		$scope.$watch("numMeasures", function (newVal, oldVal) {
 			if ($scope.measures.length > 0) {
 				if (newVal < $scope.measures.length) {
 					for (var i = 0; i < (oldVal - newVal); i++) $scope.measures.pop();
 				} else {
-					for (var i = 0; i < (newVal - oldVal); i++) $scope.measures.push(new Array($scope.timeSignature));
+					for (var i = 0; i < (newVal - oldVal); i++) {
+						$scope.measures.push([]);
+						for (var j = 0; j < $scope.timeSignature; j++) {
+							$scope.measures[i].push("");
+						}
+					}
 				}
 			} else {
-				for (var i = 0; i < $scope.numMeasures; i++) $scope.measures.push(new Array($scope.timeSignature));
+				for (var i = 0; i < $scope.numMeasures; i++) {
+					$scope.measures.push([]);
+					for (var j = 0; j < $scope.timeSignature; j++) {
+						$scope.measures[i].push("");
+					}
+				}
 			}
 		});
 	}]);

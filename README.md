@@ -20,8 +20,8 @@ v1.0 Stories
 - [x] Sequenced playback
 - [x] Measures
 - [x] Multiple chords per measure
-- [ ] Tempo
-- [ ] Time signature changes
+- [x] Tempo
+- [x] Time signature changes
 - [ ] General styling enhancements
 - [ ] Highlight current measure and chord
 - [ ] Chord typeahead

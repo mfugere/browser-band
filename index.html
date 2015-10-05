@@ -12,10 +12,13 @@
 </head>
 <body ng-controller="MainController">
 	<p>Enter some chords!</p>
-	<p>Measures:
-		<input ng-model="numMeasures" ng-model-options="{ updateOn: 'blur' }" />
+	<p>
+		<label>Measures:&nbsp;</label><input ng-model="numMeasures" ng-model-options="{ updateOn: 'blur' }" />
+		<label>Tempo:&nbsp;</label><input ng-model="tempo" />
+		<label>Time Signature:&nbsp;</label><input ng-model="timeSignature" ng-model-options="{ updateOn: 'blur' }" />
 	</p>
 	<div ng-repeat="measure in measures">
+		<label>{{$index + 1}}:&nbsp;</label>
 		<input ng-repeat="chord in measure track by $index" ng-model="measures[$parent.$index][$index]" />
 	</div>
 	<button ng-click="play()">Play</button>
